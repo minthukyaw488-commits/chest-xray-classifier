@@ -130,8 +130,6 @@ python src/evaluate_full.py
 
 **NOVEM** — Medical AI Student
 📍 Daejeon, South Korea
-🎓 Interests: Medical Imaging, AI in Healthcare, Bioinformatics
-
 ---
 
 ## 📜 License
