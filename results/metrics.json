@@ -1,0 +1,7 @@
+{
+  "val_accuracy": 1.0,
+  "test_accuracy": 0.8846,
+  "val_samples": 16,
+  "test_samples": 624,
+  "model": "ConvNeXt-Tiny"
+}

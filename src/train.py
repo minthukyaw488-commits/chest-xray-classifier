@@ -36,7 +36,7 @@ val_transform = transforms.Compose([
 ])
 
 train_data = datasets.ImageFolder(f"{DATA_DIR}/train", transform=train_transform)
-val_data = datasets.ImageFolder(f"{DATA_DIR}/val", transform=val_transform)
+val_data = datasets.ImageFolder(f"{DATA_DIR}/val_new", transform=val_transform)
 
 train_loader = DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
 val_loader = DataLoader(val_data, batch_size=BATCH_SIZE, shuffle=False, num_workers=2)
