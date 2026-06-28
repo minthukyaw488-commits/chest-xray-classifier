@@ -3,3 +3,8 @@ results/*.pth
 data/
 *.pth
 .DS_Store
+.env
+__pycache__/
+*.pyc
+results/
+data/
