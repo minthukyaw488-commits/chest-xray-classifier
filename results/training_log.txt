@@ -1,0 +1,84 @@
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+
+Epoch 1: Train Loss=0.1344 Acc=0.9472 | Val Loss=0.0624 Acc=0.9783
+
+✅ Saved new best model (val_acc=0.9783)
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+
+Epoch 2: Train Loss=0.0435 Acc=0.9833 | Val Loss=0.0568 Acc=0.9808
+
+✅ Saved new best model (val_acc=0.9808)
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+
+Epoch 3: Train Loss=0.0423 Acc=0.9853 | Val Loss=0.0438 Acc=0.9847
+
+✅ Saved new best model (val_acc=0.9847)
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+
+Epoch 4: Train Loss=0.0293 Acc=0.9887 | Val Loss=0.0402 Acc=0.9872
+
+✅ Saved new best model (val_acc=0.9872)
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+Using device: mps
+Train samples: 4434 | Val samples: 782
+Classes: ['NORMAL', 'PNEUMONIA']
+
+Epoch 5: Train Loss=0.0279 Acc=0.9901 | Val Loss=0.0484 Acc=0.9821
+
+
+Training done. Best val acc: 0.9872
