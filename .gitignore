@@ -8,3 +8,18 @@ __pycache__/
 *.pyc
 results/
 data/
+
+# Logs
+*.log
+logs/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Streamlit
+.streamlit/
+
+# Environment
+.env
+.envrc
