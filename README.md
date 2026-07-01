@@ -123,5 +123,5 @@ This project is for educational purposes only. This tool is not a substitute for
 
 ## Author
 
-Min Thu Kyaw (NOVEM)
-Medical AI student, Konyang University
+**NOVEM (MIN THU KYAW)**
+Medical AI · Konyang University, Daejeon, South Korea
