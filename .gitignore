@@ -23,3 +23,20 @@ logs/
 # Environment
 .env
 .envrc
+
+# Logs
+*.log
+logs/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Streamlit
+.streamlit/
+
+# Environment
+.env
+.envrc
+
+# OS files
+Thumbs.db
