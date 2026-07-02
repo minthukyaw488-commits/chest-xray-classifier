@@ -1,28 +1,22 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
 ## [1.1.0] - 2026-06-28
 
 ### Added
-- Streamlit web demo (`app.py`)
-- Class-weighted loss to address imbalance
-- Custom validation split script (`src/split_data.py`)
-- Full evaluation script with confusion matrix (`src/evaluate_full.py`)
+- Streamlit web demo (app.py)
+- Class-weighted loss for imbalance handling
+- Custom validation split script
+- Full evaluation with confusion matrix
 - MIT License
-- Contributing guidelines
-- Project badges in README
+- Model card documentation
 
 ### Changed
 - Restructured README with experimentation log
-- Updated dataset split (custom 15% validation from training)
-- Improved documentation across source files
+- Custom 15% validation split from training data
 
 ## [1.0.0] - 2026-05-18
 
 ### Added
-- Initial project setup
-- ConvNeXt-Tiny baseline training script
-- Quick evaluation script
-- Project README and structure
-- Trained baseline model (88.46% test accuracy)
+- Initial ConvNeXt-Tiny baseline
+- Basic training pipeline
+- Achieved 88.46% test accuracy
