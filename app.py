@@ -14,7 +14,13 @@ st.set_page_config(
 )
 
 # ---------- Config ----------
-MODEL_PATH = "results/best_model.pth"
+import os
+from huggingface_hub import hf_hub_download
+
+HF_REPO = "novemtk18/chest-xray-classifier"
+MODEL_FILENAME = "best_model.pth"
+LOCAL_MODEL_DIR = "results"
+MODEL_PATH = os.path.join(LOCAL_MODEL_DIR, MODEL_FILENAME)
 CLASS_NAMES = ["NORMAL", "PNEUMONIA"]
 DEVICE = torch.device("mps" if torch.backends.mps.is_available() 
                      else "cuda" if torch.cuda.is_available() 
@@ -23,6 +29,15 @@ DEVICE = torch.device("mps" if torch.backends.mps.is_available()
 # ---------- Load model (cached so it loads only once) ----------
 @st.cache_resource
 def load_model():
+    if not os.path.exists(MODEL_PATH):
+        os.makedirs(LOCAL_MODEL_DIR, exist_ok=True)
+        with st.spinner("Downloading model from Hugging Face..."):
+            hf_hub_download(
+                repo_id=HF_REPO,
+                filename=MODEL_FILENAME,
+                local_dir=LOCAL_MODEL_DIR,
+            )
+    
     model = models.convnext_tiny(weights=None)
     model.classifier[2] = nn.Linear(model.classifier[2].in_features, 2)
     model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
