@@ -17,54 +17,9 @@ Medical AI assistant that detects pneumonia from chest X-ray images. Built with 
 
 The application combines three capabilities:
 
-<<<<<<< HEAD
-### Key Features
-
-- Real-time pneumonia detection from uploaded X-ray images
-- Grad-CAM attention visualization showing where the model looks
-- Severity-based clinical recommendations (High/Moderate/Low Concern)
-- AI-generated medical reports powered by LLaMA 3.3
-- Confidence-weighted actionable guidance
-
-Run locally:
-\`\`\`bash
-streamlit run app.py
-\`\`\`
----
-
-## Project Overview
-
-This project applies transfer learning to classify chest X-ray images as NORMAL or PNEUMONIA. Beyond classification, it emphasizes model interpretability through Grad-CAM visualization, allowing users to see which regions influenced the model's decision. This is critical for medical AI applications where trust and transparency are essential.
-
----
-
-## Key Features
-
-**Deep Learning Model**
-- ConvNeXt-Tiny architecture pretrained on ImageNet
-- Fine-tuned on Kaggle Chest X-Ray Dataset
-- Class-weighted loss to address 1:3 data imbalance
-
-**Interpretability**
-- Grad-CAM heatmap visualization
-- Shows model attention overlay on original X-ray
-- Helps validate that model focuses on lung fields, not artifacts
-
-**Clinical Recommendations**
-- Severity levels: High/Moderate/Low Concern
-- Confidence-based actionable guidance
-- Symptoms to watch checklist
-- Clear disclaimer for educational use
-
-**Deployment**
-- Live web application on Streamlit Community Cloud
-- Model weights hosted on Hugging Face Hub
-- No local installation required to use
-=======
 1. **Classification** — ConvNeXt-Tiny CNN predicts NORMAL or PNEUMONIA
 2. **Interpretability** — Grad-CAM heatmap shows where the model looks
 3. **Reporting** — LLaMA 3.3 generates patient-friendly clinical reports
->>>>>>> e4b598d (docs: streamline README for professional readability)
 
 ---
 
@@ -198,9 +153,4 @@ This is a research and educational tool. Predictions and AI-generated reports sh
 
 ## License
 
-<<<<<<< HEAD
-This project is released under the MIT License. See [LICENSE](LICENSE) for details.
-The dataset license follows the original Kaggle terms.
-=======
 MIT © 2026 NOVEM
->>>>>>> e4b598d (docs: streamline README for professional readability)
