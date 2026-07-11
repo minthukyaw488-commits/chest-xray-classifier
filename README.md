@@ -2,18 +2,22 @@
 
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.0-red)
+![Streamlit](https://img.shields.io/badge/Streamlit-Live-FF4B4B)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Streamlit](https://img.shields.io/badge/Streamlit-Demo-FF4B4B)
 
-A deep learning-based medical AI assistant that detects pneumonia from chest X-ray images using ConvNeXt-Tiny, with Grad-CAM interpretability for clinical trust.
+Medical AI assistant that detects pneumonia from chest X-ray images. Built with ConvNeXt-Tiny, deployed with Grad-CAM interpretability and LLM-generated clinical reports.
+
+**[Live Demo](https://novem-chest-xray.streamlit.app)** · **[Model Weights](https://huggingface.co/novemtk18/chest-xray-classifier)** · **[Report Issues](https://github.com/minthukyaw488-commits/chest-xray-classifier/issues)**
 
 ---
 
-## Live Demo
+## Demo
 
-Try the model live: **[Chest X-Ray Classifier on Streamlit](https://novem-chest-xray.streamlit.app)**
+![Application Demo](results/demo_1_home.png)
 
+The application combines three capabilities:
 
+<<<<<<< HEAD
 ### Key Features
 
 - Real-time pneumonia detection from uploaded X-ray images
@@ -56,229 +60,147 @@ This project applies transfer learning to classify chest X-ray images as NORMAL 
 - Live web application on Streamlit Community Cloud
 - Model weights hosted on Hugging Face Hub
 - No local installation required to use
+=======
+1. **Classification** — ConvNeXt-Tiny CNN predicts NORMAL or PNEUMONIA
+2. **Interpretability** — Grad-CAM heatmap shows where the model looks
+3. **Reporting** — LLaMA 3.3 generates patient-friendly clinical reports
+>>>>>>> e4b598d (docs: streamline README for professional readability)
 
 ---
 
 ## Results
 
-### Test Set Performance (624 images)
+| Metric | Value |
+|--------|-------|
+| Test Accuracy | 81% |
+| PNEUMONIA Recall | 100% |
+| PNEUMONIA Precision | 77% |
+| NORMAL Recall | 50% |
 
-| Class | Precision | Recall | F1-Score |
-|-------|-----------|--------|----------|
-| NORMAL | 0.99 | 0.50 | 0.67 |
-| PNEUMONIA | 0.77 | 1.00 | 0.87 |
-| Overall Accuracy | | | 81% |
-
-![Confusion Matrix](results/confusion_matrix.png)
-
-### Model Interpretability
-
-The Grad-CAM visualization confirms the model focuses on clinically relevant regions:
-
-![Grad-CAM Heatmap](results/demo_heatmap.png)
-
-In this example, the model correctly focuses attention on the lower lung fields (highlighted in red/yellow), which is where pneumonia consolidation typically appears clinically. This alignment between model attention and clinical relevance provides confidence that the model is learning meaningful features rather than spurious correlations from image artifacts or borders.
-
-**Color interpretation:**
-- Red/Yellow: High attention (decision-influencing regions)
-- Green: Moderate attention
-- Blue: Low attention (ignored regions)
+Trained on 5,216 images from the Kaggle Chest X-Ray Dataset. See [Experimentation Log](#experimentation-log) for the story behind these numbers.
 
 ---
 
-## Experimentation Log
+## Quick Start
 
-### v1: Baseline (ConvNeXt-Tiny, no class weighting)
+```bash
+# 1. Clone
+git clone https://github.com/minthukyaw488-commits/chest-xray-classifier.git
+cd chest-xray-classifier
 
-- Test Accuracy: 88.46%
-- NORMAL Recall: 70%
-- PNEUMONIA Recall: 99%
-- Observation: Model over-predicts pneumonia due to 1:3 class imbalance
+# 2. Install
+pip install -r requirements.txt
 
-### v2: Weighted Loss with Proper Validation Split
+# 3. Run the app
+streamlit run app.py
+```
 
-- Validation Accuracy: 97.83% (on held-out 15% split from training set)
-- Test Accuracy: 81%
-- PNEUMONIA Recall: 100%
-- Observation: Large gap between validation (97.83%) and test (81%) indicates significant distribution shift between training and test sets
+The model weights are downloaded automatically from Hugging Face on first run.
 
-### v3: Interpretability Layer
+To use the AI report generator, add your [Groq API key](https://console.groq.com/keys) to `.streamlit/secrets.toml`:
 
-- Added Grad-CAM visualization
-- Verified model attention aligns with lung fields
-- Deployed live web application
-
-### Key Findings
-
-The Kaggle test set appears to come from a different patient cohort than the training set, causing a performance gap that internal validation does not reveal. This is a well-known challenge in medical AI called domain shift. High validation accuracy does not guarantee real-world performance, and independent test evaluation with interpretability tools like Grad-CAM are essential for trust.
+```toml
+GROQ_API_KEY = "gsk_your_key_here"
+```
 
 ---
 
 ## Tech Stack
 
-- Language: Python 3.13
-- Framework: PyTorch
-- Model: ConvNeXt-Tiny (pretrained on ImageNet)
-- Interpretability: Grad-CAM
-- Web App: Streamlit
-- Model Hosting: Hugging Face Hub
-- Hardware Support: Apple Silicon (MPS) / CUDA / CPU
-
----
-
-## Training Configuration
-
-| Hyperparameter | Value |
-|----------------|-------|
-| Model | ConvNeXt-Tiny |
-| Batch Size | 32 |
-| Epochs | 5 |
-| Learning Rate | 1e-4 |
-| Optimizer | AdamW |
-| Loss Function | Weighted Cross Entropy |
-| Image Size | 224 × 224 |
-
----
-
-## Dataset
-
-- Source: [Kaggle Chest X-Ray Images (Pneumonia)](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia)
-- Total Images: 5,856
-- Classes: NORMAL, PNEUMONIA
-
-| Split | NORMAL | PNEUMONIA | Total |
-|-------|--------|-----------|-------|
-| Train | 1,140 | 3,294 | 4,434 |
-| Validation (custom 15% split) | 201 | 581 | 782 |
-| Test | 234 | 390 | 624 |
-
-Note: The original Kaggle validation set contains only 16 images, which is insufficient for reliable validation. A custom 15% split from the training data was created.
+- **Model:** ConvNeXt-Tiny (PyTorch)
+- **Interpretability:** Grad-CAM
+- **Web App:** Streamlit
+- **LLM Reports:** Groq API (LLaMA 3.3-70b)
+- **Model Hosting:** Hugging Face Hub
 
 ---
 
 ## Project Structure
-chest-xray-classifier/
 ├── src/
-│   ├── train.py              # Training script with weighted loss
-│   ├── split_data.py         # Creates validation split from training data
-│   ├── check_accuracy.py     # Quick model evaluation
-│   ├── evaluate_full.py      # Full evaluation with confusion matrix
-│   ├── inference.py          # Single image prediction
+│   ├── train.py              # Training with weighted loss
+│   ├── evaluate_full.py      # Full evaluation + confusion matrix
 │   ├── gradcam.py            # Grad-CAM implementation
+│   ├── report_generator.py   # Groq LLM report generator
 │   └── model.py              # Model architecture
-├── results/
-│   ├── best_model.pth        # Trained model weights (hosted on Hugging Face)
-│   ├── confusion_matrix.png
-│   ├── classification_report.json
-│   ├── metrics.json
-│   ├── training_log.txt
-│   ├── demo_heatmap.png
-│   ├── demo_pneumonia.png
-│   └── demo_normal.png
-├── data/                     # Dataset (not tracked)
-├── app.py                    # Streamlit web application
+├── results/                  # Metrics, plots, screenshots
+├── app.py                    # Streamlit application
 ├── requirements.txt
-├── LICENSE
-├── MODEL_CARD.md
-├── CHANGELOG.md
 └── README.md
 
 ---
 
-## How to Run Locally
-
-### 1. Clone the repository
+## Training
 
 ```bash
-git clone https://github.com/minthukyaw488-commits/chest-xray-classifier.git
-cd chest-xray-classifier
-```
-
-### 2. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Download the dataset
-
-Download from [Kaggle](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia) and extract to `data/chest_xray/`.
-
-### 4. Create validation split
-
-```bash
+# Create validation split (15% from training data)
 python src/split_data.py
-```
 
-### 5. Train the model
-
-```bash
+# Train the model
 python src/train.py
-```
 
-### 6. Evaluate on the test set
-
-```bash
+# Evaluate on test set
 python src/evaluate_full.py
 ```
 
-### 7. Launch the web application
-
-```bash
-streamlit run app.py
-```
-
-The model weights will be automatically downloaded from Hugging Face on first run.
+**Configuration:** ConvNeXt-Tiny · 5 epochs · Batch size 32 · AdamW (lr=1e-4) · Weighted Cross Entropy
 
 ---
 
-## Model Weights
+## Experimentation Log
 
-Pretrained model weights are hosted on Hugging Face:
-[novemtk18/chest-xray-classifier](https://huggingface.co/novemtk18/chest-xray-classifier)
+### v1 — Baseline
+88.46% test accuracy. Model over-predicted pneumonia due to 1:3 class imbalance in training data. NORMAL recall was only 70%.
+
+### v2 — Weighted Loss
+Added class-weighted loss to address imbalance. Validation accuracy jumped to 97.83%, but test accuracy dropped to 81%. This gap revealed **distribution shift** between training and test sets — a common issue in medical AI where test data comes from a different patient cohort.
+
+### v3 — Interpretability
+Added Grad-CAM to visualize model attention. Verified the model focuses on lung fields, not spurious artifacts. Deployed to Streamlit Cloud.
+
+### v4 — LLM Reports
+Integrated Groq API (LLaMA 3.3) to generate patient-friendly clinical reports from classification results.
+
+### Key Insight
+High validation accuracy doesn't guarantee real-world performance. Independent test evaluation and interpretability tools are essential in medical AI.
 
 ---
 
-## Known Limitations
+## Limitations
 
-- Significant class imbalance in training data (1:3 NORMAL to PNEUMONIA ratio)
-- Distribution shift between training and test sets reduces real-world performance
-- The model has not been validated on external datasets such as NIH ChestX-ray14 or CheXpert
-- Trained on a single dataset, limiting generalizability to different hospital populations
-- Cannot distinguish between bacterial and viral pneumonia
+- Class imbalance (1:3 NORMAL:PNEUMONIA) affects generalization
+- Distribution shift between train and test sets
+- Not validated on external datasets (NIH ChestX-ray14, CheXpert)
+- Cannot distinguish bacterial vs viral pneumonia
+- Single-dataset training limits generalizability
 
 ---
 
 ## Future Work
 
-- Implement WeightedRandomSampler as an alternative to weighted loss
-- Quantify and visualize the distribution shift between train and test sets
-- Add stronger data augmentation strategies (CutMix, MixUp) to improve generalization
-- Benchmark against other architectures (ResNet50, EfficientNet, DenseNet)
-- Validate on external datasets to assess generalizability
-- Add multi-language support (English, Korean, Burmese)
-- Generate downloadable PDF reports for each analysis
+- [ ] External dataset validation (CheXpert, NIH ChestX-ray14)
+- [ ] WeightedRandomSampler alternative to weighted loss
+- [ ] Stronger augmentation (CutMix, MixUp)
+- [ ] Multi-model benchmarking (ResNet50, EfficientNet)
+- [ ] Multi-language support (EN/KO/MY)
+- [ ] Downloadable PDF reports
 
 ---
 
 ## Disclaimer
 
-This project is for educational and research purposes only. It is not intended for clinical use, diagnosis, or treatment decisions. Any medical AI system requires extensive validation, regulatory approval, and clinical oversight before real-world deployment. Always consult qualified healthcare professionals for medical advice.
+This is a research and educational tool. Predictions and AI-generated reports should not be used for clinical diagnosis or treatment decisions. Always consult qualified healthcare professionals.
 
 ---
 
 ## Author
 
-**NOVEM (Min Thu Kyaw)**
-Medical AI Student
-Konyang University, Daejeon, South Korea
-
-- GitHub: [@minthukyaw488-commits](https://github.com/minthukyaw488-commits)
-- Hugging Face: [@novemtk18](https://huggingface.co/novemtk18)
-
----
+**NOVEM (Min Thu Kyaw)** — Medical AI Student, Konyang University
 
 ## License
 
+<<<<<<< HEAD
 This project is released under the MIT License. See [LICENSE](LICENSE) for details.
 The dataset license follows the original Kaggle terms.
+=======
+MIT © 2026 NOVEM
+>>>>>>> e4b598d (docs: streamline README for professional readability)
