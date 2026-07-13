@@ -150,7 +150,3 @@ This is a research and educational tool. Predictions and AI-generated reports sh
 ## Author
 
 **NOVEM (Min Thu Kyaw)** — Medical AI Student, Konyang University
-
-## License
-
-MIT © 2026 NOVEM
