@@ -147,6 +147,12 @@ This is a research and educational tool. Predictions and AI-generated reports sh
 
 ---
 
+## License
+
+This project is licensed under the MIT License.
+
+---
+
 ## Author
 
 **NOVEM (Min Thu Kyaw)** — Medical AI Student, Konyang University
