@@ -7,6 +7,7 @@ from PIL import Image
 import os
 import sys
 import numpy as np
+import json
 from huggingface_hub import hf_hub_download
 from datetime import datetime
 
@@ -252,10 +253,48 @@ HF_REPO = "novemtk18/chest-xray-classifier"
 MODEL_FILENAME = "best_model.pth"
 LOCAL_MODEL_DIR = "results"
 MODEL_PATH = os.path.join(LOCAL_MODEL_DIR, MODEL_FILENAME)
+METRICS_PATH = os.path.join(LOCAL_MODEL_DIR, "classification_report.json")
 CLASS_NAMES = ["NORMAL", "PNEUMONIA"]
+DEFAULT_PNEUMONIA_THRESHOLD = 0.60
 DEVICE = torch.device("mps" if torch.backends.mps.is_available() 
                      else "cuda" if torch.cuda.is_available() 
                      else "cpu")
+
+
+def format_percent(value):
+    return "N/A" if value is None else f"{value * 100:.1f}%"
+
+
+def load_evaluation_summary():
+    summary = {
+        "accuracy": None,
+        "pneumonia_recall": None,
+        "pneumonia_precision": None,
+        "normal_recall": None,
+        "threshold": DEFAULT_PNEUMONIA_THRESHOLD,
+    }
+
+    if not os.path.exists(METRICS_PATH):
+        return summary
+
+    try:
+        with open(METRICS_PATH) as f:
+            report = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return summary
+
+    medical_metrics = report.get("medical_metrics", {})
+    summary["accuracy"] = report.get("accuracy")
+    summary["pneumonia_recall"] = report.get("PNEUMONIA", {}).get("recall")
+    summary["pneumonia_precision"] = report.get("PNEUMONIA", {}).get("precision")
+    summary["normal_recall"] = report.get("NORMAL", {}).get("recall")
+    summary["threshold"] = medical_metrics.get("threshold", DEFAULT_PNEUMONIA_THRESHOLD)
+
+    return summary
+
+
+EVALUATION_SUMMARY = load_evaluation_summary()
+PNEUMONIA_THRESHOLD = EVALUATION_SUMMARY["threshold"]
 
 # ---------- Load Model ----------
 @st.cache_resource
@@ -293,6 +332,8 @@ transform = transforms.Compose([
                          std=[0.229, 0.224, 0.225]),
 ])
 
+PNEUMONIA_THRESHOLD = 0.70
+
 def predict(image):
     if image.mode != "RGB":
         image = image.convert("RGB")
@@ -301,7 +342,13 @@ def predict(image):
     
     outputs = model(img_tensor)
     probs = F.softmax(outputs, dim=1)[0].detach().cpu().numpy()
-    pred_idx = int(probs.argmax())
+    pred_idx = 1 if probs[1] >= PNEUMONIA_THRESHOLD else 0
+
+    pneumonia_prob = probs[1]
+    if pneumonia_prob >= PNEUMONIA_THRESHOLD:
+        pred_idx = 1  # PNEUMONIA
+    else:
+        pred_idx = 0  # NORMAL
     
     heatmap, _ = gradcam.generate(img_tensor, class_idx=pred_idx)
     heatmap_overlay = overlay_heatmap(image, heatmap, alpha=0.45)
@@ -351,26 +398,27 @@ with st.sidebar:
     
     st.markdown("### Model Specifications")
     
-    st.markdown("""
+    st.markdown(f"""
     <div class='sidebar-section'>
         <div style='font-size: 0.85rem; line-height: 1.6;'>
             <strong>Architecture:</strong> ConvNeXt-Tiny<br>
             <strong>Parameters:</strong> ~28M<br>
             <strong>Input Size:</strong> 224×224<br>
-            <strong>Classes:</strong> 2 (Binary)
+            <strong>Classes:</strong> 2 (Binary)<br>
+            <strong>Pneumonia Threshold:</strong> {format_percent(PNEUMONIA_THRESHOLD)}
         </div>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("### Performance Metrics")
     
-    st.markdown("""
+    st.markdown(f"""
     <div class='sidebar-section'>
         <div style='font-size: 0.85rem; line-height: 1.8;'>
-            <strong>Test Accuracy:</strong> 81.0%<br>
-            <strong>PNEUMONIA Recall:</strong> 100%<br>
-            <strong>PNEUMONIA Precision:</strong> 77%<br>
-            <strong>NORMAL Recall:</strong> 50%
+            <strong>Test Accuracy:</strong> {format_percent(EVALUATION_SUMMARY["accuracy"])}<br>
+            <strong>PNEUMONIA Recall:</strong> {format_percent(EVALUATION_SUMMARY["pneumonia_recall"])}<br>
+            <strong>PNEUMONIA Precision:</strong> {format_percent(EVALUATION_SUMMARY["pneumonia_precision"])}<br>
+            <strong>NORMAL Recall:</strong> {format_percent(EVALUATION_SUMMARY["normal_recall"])}
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -413,11 +461,11 @@ with col_main:
         tab1, tab2 = st.tabs(["Original X-Ray", "AI Attention Map"])
         
         with tab1:
-            st.image(image, use_column_width=True)
+            st.image(image, use_container_width=True)
             st.caption(f"File: {uploaded_file.name} | Size: {image.size[0]}×{image.size[1]} px")
         
         with tab2:
-            st.image(heatmap_img, use_column_width=True)
+            st.image(heatmap_img, use_container_width=True)
             st.caption(
                 "Red/yellow areas = high model attention. "
                 "Blue = low attention. Shows where the model focused."
@@ -439,7 +487,8 @@ with col_side:
     if uploaded_file is not None:
         st.markdown("### Analysis Report")
         
-        confidence = probs.max() * 100
+        pred_idx = CLASS_NAMES.index(pred_class)
+        confidence = probs[pred_idx] * 100
         
         if pred_class == "PNEUMONIA":
             st.markdown(
