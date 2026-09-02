@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0] - 2026-08-31
+
+### Added
+- WeightedRandomSampler for class-balanced batches
+- Conservative augmentation pipeline (crop, flip, rotation, color jitter, affine, blur, random erasing)
+- Cosine annealing LR schedule and gradient clipping
+- Threshold sweep in evaluation with ROC AUC and PR AUC
+- Training history logging (results/training_history.json)
+
+### Changed
+- Replaced weighted loss with WeightedRandomSampler
+- Trained for 10 epochs (was 5)
+- Test accuracy improved from 81% to 95%; NORMAL recall from 50% to 90%
+
 ## [1.1.0] - 2026-06-28
 
 ### Added

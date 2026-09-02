@@ -1,7 +1,13 @@
 {
-  "val_accuracy": 1.0,
-  "test_accuracy": 0.8846,
-  "val_samples": 16,
+  "val_accuracy": 0.9872,
+  "test_accuracy": 0.9503,
+  "val_samples": 782,
   "test_samples": 624,
+  "threshold": 0.7,
+  "pneumonia_recall": 0.982,
+  "normal_recall": 0.8974,
+  "macro_f1": 0.9462,
+  "roc_auc": 0.9881,
+  "pr_auc": 0.9912,
   "model": "ConvNeXt-Tiny"
 }

@@ -4,8 +4,8 @@
 
 - Architecture: ConvNeXt-Tiny (pretrained on ImageNet)
 - Framework: PyTorch
-- Version: 1.1.0
-- Date: June 2026
+- Version: 1.2.0
+- Date: August 2026
 
 ## Intended Use
 
@@ -21,9 +21,23 @@ Not intended for clinical diagnosis.
 
 ## Performance
 
-- Test Accuracy: 81%
-- PNEUMONIA Recall: 100%
-- NORMAL Recall: 50%
+Evaluated on the 624-image held-out test set at a 0.70 decision threshold.
+
+- Test Accuracy: 95.0%
+- PNEUMONIA Recall (Sensitivity): 98.2%
+- PNEUMONIA Precision: 94.1%
+- NORMAL Recall (Specificity): 89.7%
+- NORMAL Precision: 96.8%
+- Macro F1: 94.6%
+- ROC AUC: 0.988
+- PR AUC: 0.991
+
+## Training Setup
+
+- Class balancing: WeightedRandomSampler (oversamples minority NORMAL class)
+- Augmentation: crop, horizontal flip, rotation, color jitter, affine, light blur, random erasing
+- 10 epochs, AdamW (lr=1e-4, weight decay=1e-4), cosine annealing LR, gradient clipping (max_norm=1.0)
+- Decision threshold tuned via sweep (0.50–0.80) to keep pneumonia recall ≥ 0.98
 
 ## Limitations
 
